@@ -1,4 +1,4 @@
-﻿
+
 ############################################
 # SharePoint Unattended Site Build 
 # Author: ahmad.buhari@us.af.mil
@@ -7,89 +7,11 @@
 
 
 
-
-
-
-##Function for Menu
-
-    function PowerShell-Menu {
-
-
-    #Menu options
-        param ([string]$Title = '')
-
-        #clear screen
-        Clear-Host
-
-        #Outpput Menu Title & Menu Selection
-        Write-Host "---$Title---
-
-        `n
-        `n Press 1 - Verfiy SharePoint Pnp Module
-        `n Press 2 - Enter Site Name
-        `n Press 3 - Enable Site (SharePoint Server Enterprise)
-        `n Press 4 - 
-        `n Press 5 - Quit   
-     
-        " -ForegroundColor Yellow
-        
-
-      
-        
-    }
-
-    
-    #Title for Menu        
-        PowerShell-Menu -Title 'SharePoint Unattended Commands'
-
-       
-        
-        #Looping statement until var $selection ends
-        do {
-        
-             $Path = $PSScriptRoot 
-             $selection = Read-Host -Prompt "`n Please Select the following options"
-        
-                
-                # Iterating through loop
-                Try { 
-                        switch ($selection) 
-
-                        {
-                        
-                        '1' {Get-Module -Name SharePointPnPPowerShellOnline} 
-                        '2' {$site = Read-Host -Prompt 'Enter SharePoint Site' (Connect-PnPOnline -Url $site -UseWebLogin)}
-                        '3' {Connect-PnPOnline -Url $site -UseWebLogin}
-                        '5' {Write-Host " `n Exiting Window " -ForegroundColor Red}
-        
-                        }
-
-                    }
-
-                        catch { [System.OutOfMemoryException]
-                    
-                        Write-Host 'Restart Powershell script' -ForegroundColor Red
-                                }
-                
-                            if ($selection -gt 5) {Write-Host 'try again'}
-
-                
-                            } until ($selection -eq 5)
-
-                
-            
-
 #Site Feature Identity
 
 #Publishing guid 22a9ef51-737b-4ff2-9346-694633fe4416
 
-    #$Publishing = '22a9ef51-737b-4ff2-9346-694633fe4416'
-
-    #Write-Host Enabling Publising -ForegroundColor Yellow 
-
-    #Enable-PnPFeature -Identity $Publishing 
-
-
+#$Publishing = '22a9ef51-737b-4ff2-9346-694633fe4416'
 
 #Enable SharePoint Standard Site feature 99fe402e-89a0-45aa-9163-85342e865dc8 (Display Name: BaseWeb)
 
@@ -109,4 +31,97 @@
 
 #Enable SharePoint Publishing guid dffaae84-60ee-413a-9600-1cf431cf0560 (RollupPages)
 
-#Enable Team Collab guid  00bfea71-4ea5-48d4-a4ad-7ea5c011abe5
+#Enable Team Collab guid 00bfea71-4ea5-48d4-a4ad-7ea5c011abe5
+
+
+
+
+
+
+##Function for Menu
+
+function PowerShellMenu {
+
+
+    #Menu options
+    param ([string]$Title = '')
+
+    #clear screen
+    Clear-Host
+
+    #Outpput Menu Title & Menu Selection
+    Write-Host "---$Title---
+
+        `n
+        `n Press 1 - Verfiy SharePoint Pnp Module
+        `n Press 2 - Connect to SharePoint Page
+        `n Press 3 - 
+        `n Press 4 - 
+        `n Press 5 - Quit   
+     
+        " -ForegroundColor Yellow
+              
+}
+
+    
+#Title for Menu        
+PowerShell-Menu -Title 'SharePoint Unattended Commands'
+
+       
+        
+#Looping statement until var $selection ends
+do {
+        
+    $Path = $PSScriptRoot 
+    $selection = Read-Host -Prompt "`n Please Select the following options"
+        
+                
+    # Iterating through loop
+    Try { 
+        switch ($selection) 
+        {
+                        
+            '1' { Get-Module -Name SharePointPnPPowerShellOnline } 
+            '2' {
+                $site = Read-Host -Prompt " `n Enter SharePoint Site URL (copy and paste)" ; 
+                Connect-PnPOnline -Url $site -UseWebLogin ;
+                Write-Host "Connected To" ; 
+                Get-PnPSite 
+
+            }
+            '3' { Connect-PnPOnline -Url $site -UseWebLogin }
+            '4' { disconnect-p }
+            '5' { Write-Host " `n Exiting Window " -ForegroundColor Red }
+        
+        }
+
+    }
+
+    catch {
+        [System.OutOfMemoryException]
+                    
+        Write-Host 'Restart Powershell script' -ForegroundColor Red
+    }
+                
+    if ($selection -gt 5) { Write-Host 'try again' }
+
+                
+} until ($selection -eq 5)
+
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
