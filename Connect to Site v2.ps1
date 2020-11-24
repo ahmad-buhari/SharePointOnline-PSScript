@@ -93,7 +93,7 @@ do {
                 Write-Host " `n Connected To" ; 
                 Get-PnPSite 
             }
-            
+
             '3' { 
 
                 Enable-PnPFeature -Identity $publishing ;
@@ -132,19 +132,3 @@ do {
 } until ($selection -eq 9)
 
                 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
