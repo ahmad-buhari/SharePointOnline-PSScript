@@ -37,9 +37,6 @@ $collab = '00bfea71-4ea5-48d4-a4ad-7ea5c011abe5'
 
 
 
-
-
-
 ##Function for Menu
 
 function PowerShell-Menu {
@@ -57,10 +54,11 @@ function PowerShell-Menu {
         `n
         `n Press 1 - Verfiy SharePoint Pnp Module
         `n Press 2 - Connect to SharePoint Page
-        `n Press 3 - Enable Site Feature
+        `n Press 3 - Enable Site Features (Collaboration, Enterprise, Feed, Pages & Publishing )
         `n Press 4 - Get current Site Features
         `n Press 5 - Example Project Example Site
         `n Press 6 - Create Wiki Example Page
+        `n Press 8 - Disconnect for SharePoint Page
         `n Press 9 - Quit   
      
         " -ForegroundColor Yellow
@@ -82,7 +80,7 @@ do {
                 
     # Iterating through loop
     Try { 
-        switch ($selection) 
+        switch ([int]$selection) 
         {
                         
             '1' { Get-Module -Name SharePointPnPPowerShellOnline } 
@@ -91,7 +89,7 @@ do {
                 $site = Read-Host -Prompt " `n Enter SharePoint Site URL (copy and paste)" ; 
                 Connect-PnPOnline -Url $site -UseWebLogin ;
                 Write-Host " `n Connected To" ; 
-                Get-PnPSite 
+                Get-PnPSite ;
             }
 
             '3' { 
@@ -111,8 +109,11 @@ do {
 
             '5' {
 
+                Add-PnPFile -Path .\Example-Page.aspx -Folder $site/SitePages
 
             }
+
+            '8' {Disconnect-PnPOnline}
 
             '9' { Write-Host " `n Exiting Window `n " -ForegroundColor Red }
         
