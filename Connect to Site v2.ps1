@@ -10,30 +10,28 @@
 #Site Feature Identity
 
 #Enable SharePoint Publishing guid dffaae84-60ee-413a-9600-1cf431cf0560 (RollupPages)
-
 $publishing = 'dffaae84-60ee-413a-9600-1cf431cf0560'
 
 #Enable SharePoint Standard Site feature 99fe402e-89a0-45aa-9163-85342e865dc8 (Display Name: BaseWeb)
-
-$standard = '99fe402e-89a0-45aa-9163-85342e865dc8'   
+$standard = '99fe402e-89a0-45aa-9163-85342e865dc8'
 
 #Enable Enterprise SharePoint Site feature 0806d127-06e6-447a-980e-2e90b03101b8 (Premium Web)
-
 $enterprise = '0806d127-06e6-447a-980e-2e90b03101b8'
 
 #Enable Site Feeds guid 15a572c6-e545-4d32-897a-bab6f5846e18
-
 $feed = '15a572c6-e545-4d32-897a-bab6f5846e18'
 
 #Enable site Pages guid b6917cb1-93a0-4b97-a84d-7cf49975d4ec
-
 $pages = 'b6917cb1-93a0-4b97-a84d-7cf49975d4ec'
 
 #Enable Team Collab guid 00bfea71-4ea5-48d4-a4ad-7ea5c011abe5
-
 $collab = '00bfea71-4ea5-48d4-a4ad-7ea5c011abe5'
 
-#Enable WebFeature a0e5a010-1329-49d4-9e09-f280cdbed37d
+#Enable Server Publishing guid 94c94ca6-b32f-4da9-a9e3-1f3d343d7ecb
+$publishingSP = '94c94ca6-b32f-4da9-a9e3-1f3d343d7ecb'
+
+#Enable Wiki guid 00bfea71-d8fe-4fec-8dad-01c19a6e4053
+$wiki = '00bfea71-d8fe-4fec-8dad-01c19a6e4053'
 
 
 
@@ -54,7 +52,7 @@ function PowerShell-Menu {
                                 `n
                                 `n Press 1 - Verfiy SharePoint Pnp Module
                                 `n Press 2 - Connect to SharePoint Page
-                                `n Press 3 - Enable Site Features (Collaboration, Enterprise, Feed, Pages & Publishing )
+                                `n Press 3 - Enable Site Features (Collaboration, Enterprise, Feed, Pages, Publishing, & Wiki )
                                 `n Press 4 - Get current Site Features
                                 `n Press 5 - Create Example Site
                                 `n Press 6 - Get all List pages
@@ -101,6 +99,8 @@ do {
                 Enable-PnPFeature -Identity $feed ;
                 Enable-PnPFeature -Identity $pages ;
                 Enable-PnPFeature -Identity $collab ;
+                Enable-PnPFeature -Identity $publishingSP ;
+                Enable-PnPFeature -Identity $wiki
             }
 
             '4' {
