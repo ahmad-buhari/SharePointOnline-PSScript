@@ -100,7 +100,7 @@ do {
                 Enable-PnPFeature -Identity $pages ;
                 Enable-PnPFeature -Identity $collab ;
                 Enable-PnPFeature -Identity $publishingSP ;
-                Enable-PnPFeature -Identity $wiki
+                Enable-PnPFeature -Identity $wiki ;
             }
 
             '4' {
