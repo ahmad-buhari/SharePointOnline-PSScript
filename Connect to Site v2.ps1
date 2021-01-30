@@ -40,14 +40,14 @@ $wiki = '00bfea71-d8fe-4fec-8dad-01c19a6e4053'
 function PowerShell-Menu {
 
 
-                            #Menu options
-                            param ([string]$Title = '')
+    #Menu options
+    param ([string]$Title = '')
 
-                            #clear screen
-                            Clear-Host
+    #clear screen
+    Clear-Host
 
-                            #Outpput Menu Title & Menu Selection
-                            Write-Host "---$Title---
+    #Outpput Menu Title & Menu Selection
+    Write-Host "---$Title---
 
                                 `n
                                 `n Press 1 - Verfiy SharePoint Pnp Module
@@ -59,11 +59,12 @@ function PowerShell-Menu {
                                 `n Press 7 - Convert all List pages to Modern Experinces
                                 `n Press 8 - Menu Options
                                 `n Press 9 - Disconnect for SharePoint Page
-                                `n Press 10 - Quit   
+                                `n Press 10 - Build List
+                                `n Press 11 - Quit   
                                 
                                 " -ForegroundColor Yellow
               
-                        }
+}
 
     
 #Title for Menu        
@@ -87,8 +88,12 @@ do {
             '2' {
                 $site = Read-Host -Prompt " `n Enter SharePoint Site URL (copy and paste)" ; 
                 Connect-PnPOnline -Url $site -UseWebLogin ;
-                Write-Host " `n Connected To" ; 
-                Get-PnPSite ;
+                $mainpage = Get-PnPSite | select url | format-wide
+                Write-Host " `n Connected To" ; $mainpage ;
+                #Open in browser:
+                #Start-Process $site
+
+                
             }
 
             '3' { 
@@ -104,8 +109,8 @@ do {
             }
 
             '4' {
-                    Write-Host "Current Site Feature" ;  
-                    Get-PnPFeature ;
+                Write-Host "Current Site Feature" ;  
+                Get-PnPFeature ;
             }
 
             '5' {
@@ -129,9 +134,9 @@ do {
             }
 
             '6' { 
-                    Write-Host "Current List of SharePoint" ;
-                    Get-PnPList | select Title, ListExperienceOptions | Out-GridView
-                 }   
+                Write-Host "Current List of SharePoint" ;
+                Get-PnPList | select Title, ListExperienceOptions | Out-GridView
+            }   
 
             '7' {
 
@@ -145,28 +150,32 @@ do {
 
 
             '8' {
-                    Clear-Host;
+                Clear-Host;
 
-                    Write-Host " SharePoint Unattended Commands
+                Write-Host " SharePoint Unattended Commands
 
                         `n
-                        `n Press 1 - Verfiy SharePoint Pnp Module
-                        `n Press 2 - Connect to SharePoint Page
-                        `n Press 3 - Enable Site Features (Collaboration, Enterprise, Feed, Pages & Publishing )
-                        `n Press 4 - Get current Site Features
-                        `n Press 5 - Create Example Site
-                        `n Press 6 - Get all List pages
-                        `n Press 7 - Convert all List pages to Modern Experinces
-                        `n Press 8 - Menu Options
-                        `n Press 9 - Disconnect for SharePoint Page
-                        `n Press 10 - Quit 
+                        `n Press 01 - Verfiy SharePoint Pnp Module
+                        `n Press 02 - Connect to SharePoint Page
+                        `n Press 03 - Enable Site Features (Collaboration, Enterprise, Feed, Pages & Publishing )
+                        `n Press 04 - Get current Site Features
+                        `n Press 05 - Create Example Site
+                        `n Press 06 - Get all List pages
+                        `n Press 07 - Convert all List pages to Modern Experinces
+                        `n Press 08 - Menu Options
+                        `n Press 09 - Disconnect for SharePoint Page
+                        `n Press 10 - Quit
+                        `n Press 11 - Quit 
         
                         " -ForegroundColor Yellow ;
-                }
+            }
+
 
             '9' { Disconnect-PnPOnline }
 
             '10' { Write-Host " `n Exiting Window `n " -ForegroundColor Red }
+            
+            '11' { Write-Host " `n Exiting Window `n " -ForegroundColor Red }
         
         }
 
@@ -179,13 +188,72 @@ do {
 
     }
 
-    if ($selection -gt 10) { Write-Host "`n Please Choose Options" -ForegroundColor Red }
+    if ($selection -gt 11) { Write-Host "`n Please Choose Options" -ForegroundColor Red }
                 
     
     
                 
-} until ($selection -eq 10)
+} until ($selection -eq 11)
+
+
+#Intro
+#Spaces are not friendly redirect to URL
+$project = Read-Host -Prompt "Enter Project Name"
+$project0 = "$project-List"
+Write-Host $project0
+
+New-PnPList -Title "$project0" -Template GenericList ;
 
 
 
+#Only one xml attribute can be called at a time
+
+$TaskXml = '<Field Type="Text" Name="Task" DisplayName="Task" Viewable="TRUE" />
+
+'
+
+
+
+
+
+$StatusXml = '
+        <Field Type="Choice" Name="Status" DisplayName="Status" Viewable="TRUE">
+            <CHOICES>
+                <CHOICE>Not Started</CHOICE>
+                <CHOICE>In Progress</CHOICE>
+                <CHOICE>Completed</CHOICE>
+                <CHOICE>Deferred</CHOICE>
+            </CHOICES>
+            <Default>Not Started</Default>
+        </Field>
+
+'
+
+
+
+#feature10
+
+Add-PnPFieldFromXml -List "$project0" -FieldXml $TaskXml ;
+
+Start-Sleep -s 3 ;
+
+Add-PnPFieldFromXml -List "$project0" -FieldXml $StatusXml ;
+
+Start-Sleep -s 5 ;
+
+#List point to the acutal list, Identity refers to the "View" name, Fields refers to the coloumn (multiple coulmns can be called)
+
+#Add Custom View
+Set-PnPView -List "$project0" -Identity "All Items" -Fields "Task", "Status" -ErrorAction SilentlyContinue ;
+
+#Waiting for html to build
+Start-Sleep -s 5 ;
+
+
+$project1 = Get-PnPList "$project0" ;
+$parent = "https://afnet52.sharepoint.com" ;
+$full = ($parent + $project1.DefaultViewUrl) ;
+
+#opens in web browser
+Start-Process -FilePath Chrome $full
                 
