@@ -196,10 +196,11 @@ do {
 } until ($selection -eq 11)
 
 
-####Feature10 in-progress####
+####Feature10 = Project Document Folder in-progress####
 
 #Naming new sharepoint list
 #Lessons: Spaces are not friendly when redirecting to a web browser
+$site = Read-Host -Prompt "Enter SharePoint Site"
 $project = Read-Host -Prompt "Enter Project Name"
 $project0 = "$project-List"
 $new = New-PnPList -Title "$project0" -Template GenericList 
@@ -209,6 +210,8 @@ Write-Host "Building List..." -ForegroundColor Yellow
 
 
 #Lessons: Identical xml attribute can only be assigned at a single time. Using variables to separate each new column
+
+#Update column with Document (Text) required, Attachment, Link (URL), Category (Text), Type (Text), Submitter (user), Date 
 
     $col1TaskXml = '<Field Type="Text" Name="Task" DisplayName="Task" Viewable="TRUE" />'
 
@@ -245,8 +248,9 @@ Start-Sleep -s 2 ;
 
 #Retriving new list url
 $project1 = Get-PnPList "$project0" ;
-$parent = "https://afnet52.sharepoint.com" ;
-$full = ($parent + $project1.DefaultViewUrl) ;
+
+#URL
+$full = ($site + $project1.DefaultViewUrl) ;
 
 #opens in web browser
 Write-Host "`nNew Project Page Url:" $full -ForegroundColor Yellow 
