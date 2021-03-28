@@ -1,11 +1,7 @@
 
 ############################################
-# SharePoint Unattended Site Build 
-# Author: ahmad.buhari@us.af.mil
-# Date: November 2020
+# SharePoint Unattended Build 
 ############################################
-
-
 
 #Site Feature Identity
 
@@ -34,48 +30,32 @@ $publishingSP = '94c94ca6-b32f-4da9-a9e3-1f3d343d7ecb'
 $wiki = '00bfea71-d8fe-4fec-8dad-01c19a6e4053'
 
 
-
-##Function for Menu
-
-function PowerShell-Menu {
-
-
-                            #Menu options
-                            param ([string]$Title = '')
-
-                            #clear screen
-                            Clear-Host
-
-                            #Outpput Menu Title & Menu Selection
-                            Write-Host "---$Title---
-
-                                `n
-                                `n Press 1 - Verfiy SharePoint Pnp Module
-                                `n Press 2 - Connect to SharePoint Page
-                                `n Press 3 - Enable Site Features (Collaboration, Enterprise, Feed, Pages, Publishing, & Wiki )
-                                `n Press 4 - Get current Site Features
-                                `n Press 5 - Create Example Site
-                                `n Press 6 - Get all List pages
-                                `n Press 7 - Convert all List pages to Modern Experinces
-                                `n Press 8 - Menu Options
-                                `n Press 9 - Disconnect for SharePoint Page
-                                `n Press 10 - Quit   
-                                
-                                " -ForegroundColor Yellow
-              
-                        }
-
     
 #Title for Menu        
-PowerShell-Menu -Title "SharePoint Unattended Commands"
+$title = "SharePoint Script"
+$quit = "Press 9 to Crtl+C to exit"
+$menu = "                               
+`nSelect the following options
+`nPress 1 - Verfiy SharePoint Pnp Module
+`nPress 2 - Connect to SharePoint Page
+`nPress 3 - Enable Site Features (Collaboration, Enterprise, Feed, Pages, Publishing, & Wiki )
+`nPress 4 - Get current Site Features
+`nPress 5 - Create Example Site
+`nPress 6 - Get all List pages
+`nPress 7 - Convert all List pages to Modern Experinces
+`nPress 8 - Disconnect for SharePoint Page
+
+
+"
 
        
         
 #Looping statement until var $selection ends
 do {
         
-    $Path = $PSScriptRoot 
-    $selection = Read-Host -Prompt "`n Please Select the following options"
+    $Path = $PSScriptRoot
+    Write-Host "$title,`n$quit" -ForegroundColor Yellow 
+    $selection = Read-Host -Prompt "$menu"
    
                 
     # Iterating through loop
@@ -85,6 +65,7 @@ do {
             '1' { Get-Module -Name SharePointPnPPowerShellOnline } 
 
             '2' {
+                Clear-Host
                 $site = Read-Host -Prompt " `n Enter SharePoint Site URL (copy and paste)" ; 
                 Connect-PnPOnline -Url $site -UseWebLogin ;
                 Write-Host " `n Connected To" ; 
@@ -93,6 +74,7 @@ do {
 
             '3' { 
 
+                Clear-Host
                 Enable-PnPFeature -Identity $publishing ;
                 Enable-PnPFeature -Identity $standard ;
                 Enable-PnPFeature -Identity $enterprise ;
@@ -104,8 +86,9 @@ do {
             }
 
             '4' {
-                    Write-Host "Current Site Feature" ;  
-                    Get-PnPFeature ;
+                Clear-Host
+                Write-Host "Current Site Feature" ;  
+                Get-PnPFeature ;
             }
 
             '5' {
@@ -129,9 +112,9 @@ do {
             }
 
             '6' { 
-                    Write-Host "Current List of SharePoint" ;
-                    Get-PnPList | select Title, ListExperienceOptions | Out-GridView
-                 }   
+                Write-Host "Current List of SharePoint" ;
+                Get-PnPList | select Title, ListExperienceOptions | Out-GridView
+            }   
 
             '7' {
 
@@ -140,51 +123,27 @@ do {
                     Set-PnPList -Identity $list -ListExperience NewExperience -ErrorAction SilentlyContinue
                 }
 
-
             }
 
-
-            '8' {
-                    Clear-Host;
-
-                    Write-Host " SharePoint Unattended Commands
-
-                        `n
-                        `n Press 1 - Verfiy SharePoint Pnp Module
-                        `n Press 2 - Connect to SharePoint Page
-                        `n Press 3 - Enable Site Features (Collaboration, Enterprise, Feed, Pages & Publishing )
-                        `n Press 4 - Get current Site Features
-                        `n Press 5 - Create Example Site
-                        `n Press 6 - Get all List pages
-                        `n Press 7 - Convert all List pages to Modern Experinces
-                        `n Press 8 - Menu Options
-                        `n Press 9 - Disconnect for SharePoint Page
-                        `n Press 10 - Quit 
-        
-                        " -ForegroundColor Yellow ;
-                }
-
-            '9' { Disconnect-PnPOnline }
-
-            '10' { Write-Host " `n Exiting Window `n " -ForegroundColor Red }
+            '8' { 
+                
+                Write-Host " `nDisconnecting From SharePoint Session" -ForegroundColor Red
+                Disconnect-PnPOnline 
+            
+            }
         
         }
 
     }
 
-    catch {
-        [System.OutOfMemoryException]
-                    
-        Write-Host 'Restart Powershell script' -ForegroundColor Red; 
-
+    catch {            
+        Clear-Host
+        Wait-Event -Timeout 0.5
+        Write-Host "Restart Powershell script" -ForegroundColor Red; 
     }
 
-    if ($selection -gt 10) { Write-Host "`n Please Choose Options" -ForegroundColor Red }
-                
-    
-    
-                
-} until ($selection -eq 10)
+
+} until ($selection -eq 9)
 
 
 
