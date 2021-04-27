@@ -36,14 +36,13 @@ $title = "SharePoint Script"
 $quit = "Press 9 to Crtl+C to exit"
 $menu = "                               
 `nSelect the following options
-`nPress 1 - Verfiy SharePoint Pnp Module
-`nPress 2 - Connect to SharePoint Page
-`nPress 3 - Enable Site Features (Collaboration, Enterprise, Feed, Pages, Publishing, & Wiki )
-`nPress 4 - Get current Site Features
-`nPress 5 - Create Example Site
-`nPress 6 - Get all List pages
-`nPress 7 - Convert all List pages to Modern Experinces
-`nPress 8 - Disconnect for SharePoint Page
+`nPress 1 - Connnect to SharePoint
+`nPress 2 - Enable Site Features (Collaboration, Enterprise, Feed, Pages, Publishing, & Wiki )
+`nPress 3 - Get current Site Features
+`nPress 4 - Create Example Site
+`nPress 5 - Get all List pages
+`nPress 6 - Convert all List pages to Modern Experinces
+`nPress 7 - Disconnect for SharePoint Page
 
 
 "
@@ -62,17 +61,55 @@ do {
     Try { 
         switch ([int]$selection) {
                         
-            '1' { Get-Module -Name SharePointPnPPowerShellOnline } 
+            '1' {
 
-            '2' {
-                Clear-Host
+                #Bypass
+                Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser -Force
+
+                $check = Get-Module -ListAvailable
+
+                Write-Host "`nChecking PowerShell Module" -ForegroundColor Yellow
+                
+                if ($check.name -match "Pnp.PowerShell") {
+                
+                    Write-Host "`nModule Verified" -ForegroundColor Yellow ;
+                
+                    $check | Select-Object Name, Guid | Where-Object -Property Name -EQ "PNP.PowerShell"
+                
+                }
+                
+                else {
+                
+                    #Update Module Tool 
+                
+                    Write-Host "Updating PackageProvider" -ForegroundColor Yellow
+                
+                    Install-PackageProvider -Name NuGet -Scope CurrentUser -Force
+                
+                    Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted 
+                
+                    Write-Host "`nInstalling SharePoint Module" -ForegroundColor
+                
+                    Install-Module -Name "PNP.PowerShell" -Scope CurrentUser
+                
+                    Write-Host "`nModule Successfully Installed" -ForegroundColor Green
+                
+                    Wait-Event -Timeout 2
+                
+                
+                }
+                
                 $site = Read-Host -Prompt " `n Enter SharePoint Site URL (copy and paste)" ; 
                 Connect-PnPOnline -Url $site -UseWebLogin ;
-                Write-Host " `n Connected To" ; 
-                Get-PnPSite ;
-            }
+                
+                $site1 = Get-PnPSite
+                Write-Host "`nConnected To" -ForegroundColor Yellow 
+                $site1
+            
+            } 
 
-            '3' { 
+
+            '2' { 
 
                 Clear-Host
                 Enable-PnPFeature -Identity $publishing ;
@@ -85,13 +122,13 @@ do {
                 Enable-PnPFeature -Identity $wiki ;
             }
 
-            '4' {
+            '3' {
                 Clear-Host
                 Write-Host "Current Site Feature" ;  
-                Get-PnPFeature ;
+                Get-PnPFeature | Select-Object DisplayName, DefinitionId
             }
 
-            '5' {
+            '4' {
                 #var for example comments
                 $entry1 = "This is a text web part in a one column section. You can click inside this text block when in Edit mode to make changes. Besides being able to change the text, you can use the toolbar to choose styles, make other format changes, and add links. You can even add a table by clicking the ellipses (…) in the toolbar for more options."
                 $entry2 = " Hello! This is a Text web part in one of two columns in this section. You can click inside this text block when in Edit mode to make changes. Next to this paragraph is a column that contains an image web part. Click the image, and you can use the toolbar to change the image, add a link, crop the image, and more. Learn more about the text web part and the image web part. When you're done editing this page, you can click Save as draft to save your changes and leave edit mode. Only people with edit permissions on your site will be able to see it. If you are ready to make this page visible to everyone who can view your site, click Publish or Post news. For more information, see What happens when I publish a page?  " 
@@ -111,12 +148,12 @@ do {
                 Add-PnPClientSideText -Page "Example-Page" -Text $entry3 -Section 2 -Column 2 ;
             }
 
-            '6' { 
+            '5' { 
                 Write-Host "Current List of SharePoint" ;
                 Get-PnPList | select Title, ListExperienceOptions | Out-GridView
             }   
 
-            '7' {
+            '6' {
 
                 $SharePointList = Get-PnPList | foreach { $_.Id }
                 foreach ($list in $SharePointList) {
@@ -125,9 +162,13 @@ do {
 
             }
 
-            '8' { 
+            '7' { 
                 
                 Write-Host " `nDisconnecting From SharePoint Session" -ForegroundColor Red
+                
+                #Reset Policy
+                Set-ExecutionPolicy -ExecutionPolicy Undefined -Scope CurrentUser -Force
+
                 Disconnect-PnPOnline 
             
             }
