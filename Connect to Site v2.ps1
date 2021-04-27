@@ -63,9 +63,6 @@ do {
                         
             '1' {
 
-                #Bypass
-                Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser -Force
-
                 $check = Get-Module -ListAvailable
 
                 Write-Host "`nChecking PowerShell Module" -ForegroundColor Yellow
@@ -83,7 +80,7 @@ do {
                     #Update Module Tool 
                 
                     Write-Host "Updating PackageProvider" -ForegroundColor Yellow
-                
+
                     Install-PackageProvider -Name NuGet -Scope CurrentUser -Force
                 
                     Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted 
@@ -161,17 +158,6 @@ do {
                 }
 
             }
-
-            '7' { 
-                
-                Write-Host " `nDisconnecting From SharePoint Session" -ForegroundColor Red
-                
-                #Reset Policy
-                Set-ExecutionPolicy -ExecutionPolicy Undefined -Scope CurrentUser -Force
-
-                Disconnect-PnPOnline 
-            
-            }
         
         }
 
@@ -184,7 +170,7 @@ do {
     }
 
 
-} until ($selection -eq 9)
+} until ($selection -eq 7)
 
 
 
