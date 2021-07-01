@@ -4,7 +4,7 @@
 ![Version](https://img.shields.io/badge/PowerShell-v6.0+-blue)
 ![Stable](https://img.shields.io/badge/Status-Testing-red)
 
-Leveraging PNP Module from: https://www.powershellgallery.com/packages/PnP.PowerShell/1.4.18-nightly
+Leveraging PNP Module from: https://docs.microsoft.com/en-us/powershell/sharepoint/sharepoint-pnp/sharepoint-pnp-cmdlets
 
 Customize script focusing on common recurring SharePoint tasks. 
 
