@@ -81,7 +81,7 @@ do {
                 
                     Write-Host "Updating PackageProvider" -ForegroundColor Yellow
 
-                    Install-PackageProvider -Name NuGet -Scope CurrentUser -Force
+                   # Install-PackageProvider -Name NuGet -Scope CurrentUser -Force
                 
                     Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted 
                 
