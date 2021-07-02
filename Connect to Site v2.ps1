@@ -10,6 +10,7 @@ $new = New-PnPList -Title "$project0" -Template GenericList
 Write-Host "Building List..." -ForegroundColor Yellow
 
 
+#!! Need to add New-PNPList checker, command fails because flow does not retry.
 
 #Lessons: Identical xml attribute can only be assigned at a single time. Using variables to separate each new column
 
