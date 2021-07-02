@@ -1,0 +1,32 @@
+{
+    "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
+    "elmType": "div",
+    "style": {
+      "justify-content": "center"
+    },
+    "attributes": {
+      "class": "=if(@currentField == 'Done', 'sp-field-severity--good', if(@currentField == 'In Progress', 'sp-field-severity--low', if(@currentField == 'Not Started', 'sp-field-severity--warning', if(@currentField == 'Has issues', 'sp-field-severity--severeWarning', 'sp-field-severity--blocked')))) + ' ms-fontColor-neutralSecondary'"
+    },
+    "children": [
+      {
+        "elmType": "span",
+        "style": {
+          "display": "inline-block",
+          "padding": "0 4px"
+        },
+        "attributes": {
+          "iconName": "=if(@currentField == 'Done', 'SkypeCircleCheck', if(@currentField == 'In Progress', 'Forward', if(@currentField == 'Not Started', 'Error', if(@currentField == 'Has issues', 'Warning', 'ErrorBadge'))))"
+        }
+      },
+      {
+        "elmType": "span",
+        "txtContent": "@currentField",
+        "style": {
+          "font-size": "12px",
+          "color": "#000000",
+          "padding": "4px",
+          "text-align": "right"
+        }
+      }
+    ]
+  }

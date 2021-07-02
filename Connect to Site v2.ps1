@@ -60,3 +60,7 @@ Write-Host "Loading Page..." -ForegroundColor Yellow
 
 $newList = Start-Process -FilePath Chrome $full
                 
+
+
+
+
